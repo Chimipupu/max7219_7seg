@@ -17,7 +17,7 @@
 
 // ---------------------------------------------------
 // [MAX7219 レジスタ]
-#define REG_NO_NO               0x00
+#define REG_NO_OP               0x00
 #define REG_DIGIT_0             0x01
 #define REG_DIGIT_1             0x02
 #define REG_DIGIT_2             0x03
@@ -40,24 +40,41 @@
 #define DECODE_CODE_B_FONT       0xFF    // デコードモード = コードBフォント
 
 // コードBフォント
-#define SEG_FONT_0               0x00 // 7セグ = '0'
-#define SEG_FONT_1               0x01 // 7セグ = '1'
-#define SEG_FONT_2               0x02 // 7セグ = '2'
-#define SEG_FONT_3               0x03 // 7セグ = '3'
-#define SEG_FONT_4               0x04 // 7セグ = '4'
-#define SEG_FONT_5               0x05 // 7セグ = '5'
-#define SEG_FONT_6               0x06 // 7セグ = '6'
-#define SEG_FONT_7               0x07 // 7セグ = '7'
-#define SEG_FONT_8               0x08 // 7セグ = '8'
-#define SEG_FONT_9               0x09 // 7セグ = '9'
-#define SEG_FONT_BAR             0x0A // 7セグ = '-'
-#define SEG_FONT_E               0x0B // 7セグ = 'E'
-#define SEG_FONT_H               0x0C // 7セグ = 'H'
-#define SEG_FONT_L               0x0D // 7セグ = 'L'
-#define SEG_FONT_P               0x0E // 7セグ = 'P'
-#define SEG_FONT_BLANK           0x0F // 7セグ = 空欄
+#define SEG_B_FONT_0               0x00 // 7セグ = '0'
+#define SEG_B_FONT_1               0x01 // 7セグ = '1'
+#define SEG_B_FONT_2               0x02 // 7セグ = '2'
+#define SEG_B_FONT_3               0x03 // 7セグ = '3'
+#define SEG_B_FONT_4               0x04 // 7セグ = '4'
+#define SEG_B_FONT_5               0x05 // 7セグ = '5'
+#define SEG_B_FONT_6               0x06 // 7セグ = '6'
+#define SEG_B_FONT_7               0x07 // 7セグ = '7'
+#define SEG_B_FONT_8               0x08 // 7セグ = '8'
+#define SEG_B_FONT_9               0x09 // 7セグ = '9'
+#define SEG_B_FONT_BAR             0x0A // 7セグ = '-'
+#define SEG_B_FONT_E               0x0B // 7セグ = 'E'
+#define SEG_B_FONT_H               0x0C // 7セグ = 'H'
+#define SEG_B_FONT_L               0x0D // 7セグ = 'L'
+#define SEG_B_FONT_P               0x0E // 7セグ = 'P'
+#define SEG_B_FONT_BLANK           0x0F // 7セグ = 空欄
 
-void drv_max7219_7seg_init(void);
+typedef struct {
+    uint8_t reg_no_op;
+    uint8_t reg_digit_0;
+    uint8_t reg_digit_1;
+    uint8_t reg_digit_2;
+    uint8_t reg_digit_3;
+    uint8_t reg_digit_4;
+    uint8_t reg_digit_5;
+    uint8_t reg_digit_6;
+    uint8_t reg_digit_7;
+    uint8_t reg_decode_mode;
+    uint8_t reg_brightness;
+    uint8_t reg_scan_limit;
+    uint8_t reg_shutdown;
+    uint8_t reg_display_test;
+} max7219_reg_config_t;
+
+void drv_max7219_7seg_init(max7219_reg_config_t *p_config);
 void drv_max7219_write_7seg(uint8_t addr, uint8_t val);
 
 #endif // DRV_MAX7219_H
