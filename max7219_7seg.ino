@@ -15,7 +15,7 @@ max7219_reg_config_t g_max7219_config;
 
 void setup()
 {
-#if 1
+#if 0
     g_max7219_config.reg_decode_mode = DECODE_NONE;
 #else
     g_max7219_config.reg_decode_mode = DECODE_CODE_B_FONT;
@@ -29,5 +29,8 @@ void setup()
 
 void loop()
 {
-    // TODO:
+    static uint16_t s_val = 0;
+    drv_max7219_display_7seg(s_val);
+    s_val = (s_val + 1) % 99999999;
+    delay(1);
 }

@@ -10,6 +10,8 @@
  */
 #include "drv_max7219.h"
 
+max7219_reg_config_t *gp_config;
+
 void drv_max7219_config_reg(uint8_t addr, uint8_t val)
 {
     digitalWrite(SS, LOW);
@@ -18,13 +20,45 @@ void drv_max7219_config_reg(uint8_t addr, uint8_t val)
     digitalWrite(SS, HIGH);
 }
 
-void drv_max7219_write_7seg(uint8_t digit, uint8_t val)
+void drv_max7219_display_7seg(uint16_t val)
 {
-    // TODO
+    uint8_t d = 0;
+    uint8_t i = 0;
+    uint16_t v = 0;
+    uint8_t idx = 0;
+    uint8_t digits[8];
+
+    if(gp_config->reg_decode_mode != DECODE_CODE_B_FONT) {
+        drv_max7219_config_reg(REG_DECODE_MODE,  DECODE_CODE_B_FONT);
+    }
+
+    for (i = 0; i < 8; i++)
+    {
+        digits[i] = SEG_B_FONT_BLANK;
+    }
+
+    if (val == 0) {
+        digits[0] = SEG_B_FONT_0;
+    } else {
+        v = val;
+        idx = 0;
+        while (v > 0 && idx < 8) {
+            d = v % 10;
+            digits[idx++] = (uint8_t)(SEG_B_FONT_0 + d);
+            v /= 10;
+        }
+    }
+
+    for (i = 0; i < 8; i++)
+    {
+        drv_max7219_config_reg(REG_DIGIT_0 + i, digits[i]);
+    }
 }
 
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config)
 {
+    gp_config = p_config;
+
     SPI.begin();
     SPI.setBitOrder(MSBFIRST);
 
