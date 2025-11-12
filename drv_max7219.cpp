@@ -10,7 +10,7 @@
  */
 #include "drv_max7219.h"
 
-void drv_max7219_write_7seg(uint8_t addr, uint8_t val)
+void drv_max7219_config_reg(uint8_t addr, uint8_t val)
 {
     digitalWrite(SS, LOW);
     SPI.transfer(addr);
@@ -18,22 +18,43 @@ void drv_max7219_write_7seg(uint8_t addr, uint8_t val)
     digitalWrite(SS, HIGH);
 }
 
+void drv_max7219_write_7seg(uint8_t digit, uint8_t val)
+{
+    // TODO
+}
+
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config)
 {
     SPI.begin();
     SPI.setBitOrder(MSBFIRST);
 
-    drv_max7219_write_7seg(REG_DECODE_MODE,  p_config->reg_decode_mode);
-    drv_max7219_write_7seg(REG_BRIGHTNESS,   p_config->reg_brightness);
-    drv_max7219_write_7seg(REG_SCAN_LIMIT,   p_config->reg_scan_limit);
-    drv_max7219_write_7seg(REG_SHUTDOWN,     p_config->reg_shutdown);
-    drv_max7219_write_7seg(REG_DISPLAY_TEST, p_config->reg_display_test);
-    drv_max7219_write_7seg(REG_DIGIT_7,      p_config->reg_digit_0);
-    drv_max7219_write_7seg(REG_DIGIT_6,      p_config->reg_digit_1);
-    drv_max7219_write_7seg(REG_DIGIT_5,      p_config->reg_digit_2);
-    drv_max7219_write_7seg(REG_DIGIT_4,      p_config->reg_digit_3);
-    drv_max7219_write_7seg(REG_DIGIT_3,      p_config->reg_digit_4);
-    drv_max7219_write_7seg(REG_DIGIT_2,      p_config->reg_digit_5);
-    drv_max7219_write_7seg(REG_DIGIT_1,      p_config->reg_digit_6);
-    drv_max7219_write_7seg(REG_DIGIT_0,      p_config->reg_digit_7);
+    drv_max7219_config_reg(REG_BRIGHTNESS,   p_config->reg_brightness);
+    drv_max7219_config_reg(REG_SCAN_LIMIT,   p_config->reg_scan_limit);
+    drv_max7219_config_reg(REG_SHUTDOWN,     p_config->reg_shutdown);
+    drv_max7219_config_reg(REG_DISPLAY_TEST, p_config->reg_display_test);
+    drv_max7219_config_reg(REG_DECODE_MODE,  p_config->reg_decode_mode);
+
+#if 1
+    if(p_config->reg_decode_mode == DECODE_CODE_B_FONT) {
+        // 「01234567」を表示
+        drv_max7219_config_reg(REG_DIGIT_7, SEG_B_FONT_0);
+        drv_max7219_config_reg(REG_DIGIT_6, SEG_B_FONT_1);
+        drv_max7219_config_reg(REG_DIGIT_5, SEG_B_FONT_2);
+        drv_max7219_config_reg(REG_DIGIT_4, SEG_B_FONT_3);
+        drv_max7219_config_reg(REG_DIGIT_3, SEG_B_FONT_4);
+        drv_max7219_config_reg(REG_DIGIT_2, SEG_B_FONT_5);
+        drv_max7219_config_reg(REG_DIGIT_1, SEG_B_FONT_6);
+        drv_max7219_config_reg(REG_DIGIT_0, SEG_B_FONT_7);
+    } else {
+        // 「AbCdEF-.」を表示
+        drv_max7219_config_reg(REG_DIGIT_7, SEG_CHAR_A);
+        drv_max7219_config_reg(REG_DIGIT_6, SEG_CHAR_B);
+        drv_max7219_config_reg(REG_DIGIT_5, SEG_CHAR_C);
+        drv_max7219_config_reg(REG_DIGIT_4, SEG_CHAR_D);
+        drv_max7219_config_reg(REG_DIGIT_3, SEG_CHAR_E);
+        drv_max7219_config_reg(REG_DIGIT_2, SEG_CHAR_F);
+        drv_max7219_config_reg(REG_DIGIT_1, SEG_CHAR_MINUS);
+        drv_max7219_config_reg(REG_DIGIT_0, SEG_CHAR_DP);
+    }
+#endif
 }
