@@ -20,11 +20,11 @@ void drv_max7219_config_reg(uint8_t addr, uint8_t val)
     digitalWrite(SS, HIGH);
 }
 
-void drv_max7219_display_7seg(uint16_t val)
+void drv_max7219_display_7seg(uint32_t val)
 {
     uint8_t d = 0;
     uint8_t i = 0;
-    uint16_t v = 0;
+    uint32_t v = 0;
     uint8_t idx = 0;
     uint8_t digits[8];
 

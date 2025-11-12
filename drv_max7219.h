@@ -96,7 +96,7 @@ typedef struct {
 } max7219_reg_config_t;
 
 void drv_max7219_config_reg(uint8_t addr, uint8_t val);
-void drv_max7219_display_7seg(uint16_t val);
+void drv_max7219_display_7seg(uint32_t val);
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config);
 
 #endif // DRV_MAX7219_H

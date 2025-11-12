@@ -29,8 +29,8 @@ void setup()
 
 void loop()
 {
-    static uint16_t s_val = 0;
+    static uint32_t s_val = 0;
     drv_max7219_display_7seg(s_val);
     s_val = (s_val + 1) % 99999999;
-    delay(1);
+    // delay(1);
 }
