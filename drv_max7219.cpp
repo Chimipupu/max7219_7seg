@@ -11,6 +11,67 @@
 #include "drv_max7219.h"
 
 max7219_reg_config_t *gp_config;
+
+const uint8_t g_seg_digit[8] = {
+        REG_DIGIT_7,
+        REG_DIGIT_6,
+        REG_DIGIT_5,
+        REG_DIGIT_4,
+        REG_DIGIT_3,
+        REG_DIGIT_2,
+        REG_DIGIT_1,
+        REG_DIGIT_0
+                    };
+
+typedef struct {
+    char c;
+    uint8_t font;
+} seg_char_t;
+
+const seg_char_t g_seg_font_tbl[40] = {
+    {'0', SEG_CHAR_0},
+    {'1', SEG_CHAR_1},
+    {'2', SEG_CHAR_2},
+    {'3', SEG_CHAR_3},
+    {'4', SEG_CHAR_4},
+    {'5', SEG_CHAR_5},
+    {'6', SEG_CHAR_6},
+    {'7', SEG_CHAR_7},
+    {'8', SEG_CHAR_8},
+    {'9', SEG_CHAR_9},
+    {'A', SEG_CHAR_A},
+    {'B', SEG_CHAR_B},
+    {'C', SEG_CHAR_C},
+    {'D', SEG_CHAR_D},
+    {'E', SEG_CHAR_E},
+    {'F', SEG_CHAR_F},
+    {'G', SEG_CHAR_G},
+    {'H', SEG_CHAR_H},
+    {'I', SEG_CHAR_I},
+    {'J', SEG_CHAR_J},
+    {'K', SEG_CHAR_K},
+    {'L', SEG_CHAR_L},
+    {'N', SEG_CHAR_N},
+    {'M', SEG_CHAR_M},
+    {'O', SEG_CHAR_O},
+    {'P', SEG_CHAR_P},
+    {'Q', SEG_CHAR_Q},
+    {'R', SEG_CHAR_R},
+    {'S', SEG_CHAR_S},
+    {'T', SEG_CHAR_T},
+    {'U', SEG_CHAR_U},
+    {'V', SEG_CHAR_V},
+    {'W', SEG_CHAR_W},
+    {'X', SEG_CHAR_X},
+    {'Y', SEG_CHAR_Y},
+    {'Z', SEG_CHAR_Z},
+    {'-', SEG_CHAR_MINUS},
+    {'.', SEG_CHAR_DP},
+    {' ', SEG_CHAR_BLANK},
+    {'\0', SEG_CHAR_BLANK}
+};
+const uint8_t SEG_FONT_TBL_SIZE = sizeof(g_seg_font_tbl) / sizeof(g_seg_font_tbl[0]);
+
 static void seg_char_test(uint32_t delay_ms);
 static void seg_animation_test(uint32_t delay_ms);
 // ---------------------------------------------------
@@ -110,7 +171,7 @@ void drv_max7219_config_reg(uint8_t addr, uint8_t val)
     digitalWrite(SS, HIGH);
 }
 
-void drv_max7219_display_7seg(uint32_t val)
+void drv_max7219_show_num(uint32_t val)
 {
     uint8_t d = 0;
     uint8_t i = 0;
@@ -145,8 +206,40 @@ void drv_max7219_display_7seg(uint32_t val)
     }
 }
 
+void drv_max7219_show_char(uint8_t *p_buf)
+{
+    uint8_t q, i;
+
+    if(strlen((char *)p_buf) > 8) {
+        return;
+    }
+
+    gp_config->reg_decode_mode = DECODE_NONE;
+    drv_max7219_config_reg(REG_DECODE_MODE, gp_config->reg_decode_mode);
+
+    for(i = 0; i < 8; i++)
+    {
+        drv_max7219_config_reg(REG_DIGIT_7 - i, SEG_CHAR_BLANK);
+        for(q = 0; q < SEG_FONT_TBL_SIZE; q++)
+        {
+            if(p_buf[i] == g_seg_font_tbl[q].c)
+            {
+                drv_max7219_config_reg(REG_DIGIT_7 - i, g_seg_font_tbl[q].font);
+#ifdef DEBUG_SEG_PRINT
+                Serial.print("Digit ");
+                Serial.print(7 - i);
+                Serial.print(" : ");
+                Serial.print((char)p_buf[i]);
+                Serial.println();
+#endif
+            }
+        }
+    }
+}
+
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config)
 {
+    uint8_t i;
     gp_config = p_config;
 
     SPI.begin();
@@ -157,19 +250,21 @@ void drv_max7219_7seg_init(max7219_reg_config_t *p_config)
     drv_max7219_config_reg(REG_SHUTDOWN,     p_config->reg_shutdown);
     drv_max7219_config_reg(REG_DISPLAY_TEST, p_config->reg_display_test);
     drv_max7219_config_reg(REG_DECODE_MODE,  p_config->reg_decode_mode);
+
+    for(i = 0; i < 8; i++)
+    {
+        drv_max7219_config_reg(REG_DIGIT_0 + i, SEG_CHAR_BLANK);
+    }
 }
 
 void drv_max7219_7seg_test(void)
 {
     uint8_t i;
 
-    for(i = 0; i < 3; i++)
-    {
-        seg_char_test(500);
-    }
+    seg_char_test(300);
 
-    for(i = 0; i < 10; i++)
+    for(i = 0; i < 6; i++)
     {
-        seg_animation_test(500);
+        seg_animation_test(300);
     }
 }

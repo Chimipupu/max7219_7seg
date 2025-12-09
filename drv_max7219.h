@@ -16,6 +16,10 @@
 #include <SPI.h>
 
 // ---------------------------------------------------
+// [コンパイルスイッチ]
+#define DEBUG_SEG_TEST
+// #define DEBUG_SEG_PRINT
+// ---------------------------------------------------
 // [MAX7219 レジスタ]
 #define REG_NO_OP               0x00
 #define REG_DIGIT_0             0x01
@@ -124,7 +128,8 @@ typedef struct {
 } max7219_reg_config_t;
 // ---------------------------------------------------
 void drv_max7219_config_reg(uint8_t addr, uint8_t val);
-void drv_max7219_display_7seg(uint32_t val);
+void drv_max7219_show_num(uint32_t val);
+void drv_max7219_show_char(uint8_t *p_buf);
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config);
 void drv_max7219_7seg_test(void);
 
