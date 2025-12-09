@@ -17,7 +17,7 @@
 
 // ---------------------------------------------------
 // [コンパイルスイッチ]
-#define DEBUG_SEG_TEST
+// #define DEBUG_SEG_TEST
 // #define DEBUG_SEG_PRINT
 // ---------------------------------------------------
 // [MAX7219 レジスタ]
@@ -132,5 +132,6 @@ void drv_max7219_show_num(uint32_t val);
 void drv_max7219_show_char(uint8_t *p_buf);
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config);
 void drv_max7219_7seg_test(void);
+void drv_max7219_7seg_animation(void);
 
 #endif // DRV_MAX7219_H

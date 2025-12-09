@@ -29,17 +29,13 @@ void setup()
     g_max7219_config.reg_shutdown = 1;
     g_max7219_config.reg_display_test = 0;
     drv_max7219_7seg_init(&g_max7219_config);
+
+#ifdef DEBUG_SEG_TEST
+    drv_max7219_7seg_test();
+#endif
 }
 
 void loop()
 {
-#ifdef DEBUG_SEG_TEST
-    drv_max7219_7seg_test();
-    drv_max7219_show_char((uint8_t *)"ABCDEF01");
-#else
-    // static uint32_t s_val = 0;
-    // drv_max7219_show_num(s_val);
-    // s_val = (s_val + 1) % 99999999;
-#endif
-    delay(1000);
+    drv_max7219_7seg_animation();
 }

@@ -239,7 +239,6 @@ void drv_max7219_show_char(uint8_t *p_buf)
 
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config)
 {
-    uint8_t i;
     gp_config = p_config;
 
     SPI.begin();
@@ -249,12 +248,8 @@ void drv_max7219_7seg_init(max7219_reg_config_t *p_config)
     drv_max7219_config_reg(REG_SCAN_LIMIT,   p_config->reg_scan_limit);
     drv_max7219_config_reg(REG_SHUTDOWN,     p_config->reg_shutdown);
     drv_max7219_config_reg(REG_DISPLAY_TEST, p_config->reg_display_test);
+    drv_max7219_show_char((uint8_t *)"--------");
     drv_max7219_config_reg(REG_DECODE_MODE,  p_config->reg_decode_mode);
-
-    for(i = 0; i < 8; i++)
-    {
-        drv_max7219_config_reg(REG_DIGIT_0 + i, SEG_CHAR_BLANK);
-    }
 }
 
 void drv_max7219_7seg_test(void)
@@ -267,4 +262,9 @@ void drv_max7219_7seg_test(void)
     {
         seg_animation_test(300);
     }
+}
+
+void drv_max7219_7seg_animation(void)
+{
+    seg_animation_test(300);
 }
