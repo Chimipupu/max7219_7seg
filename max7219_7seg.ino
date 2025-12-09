@@ -29,8 +29,11 @@ void setup()
 
 void loop()
 {
+#if 1
+    drv_max7219_7seg_test();
+#else
     static uint32_t s_val = 0;
     drv_max7219_display_7seg(s_val);
     s_val = (s_val + 1) % 99999999;
-    // delay(1);
+#endif
 }
