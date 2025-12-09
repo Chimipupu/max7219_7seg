@@ -10,7 +10,7 @@
  */
 #include "drv_max7219.h"
 
-max7219_reg_config_t *gp_config;
+max7219_reg_config_t g_config;
 
 const uint8_t g_seg_digit[8] = {
         REG_DIGIT_7,
@@ -78,8 +78,8 @@ static void seg_animation_test(uint32_t delay_ms);
 static void seg_char_test(uint32_t delay_ms)
 {
     // 「01234567」
-    gp_config->reg_decode_mode = DECODE_CODE_B_FONT;
-    drv_max7219_config_reg(REG_DECODE_MODE, gp_config->reg_decode_mode);
+    g_config.reg_decode_mode = DECODE_CODE_B_FONT;
+    drv_max7219_config_reg(REG_DECODE_MODE, g_config.reg_decode_mode);
     drv_max7219_config_reg(REG_DIGIT_7, SEG_B_FONT_0);
     drv_max7219_config_reg(REG_DIGIT_6, SEG_B_FONT_1);
     drv_max7219_config_reg(REG_DIGIT_5, SEG_B_FONT_2);
@@ -91,8 +91,8 @@ static void seg_char_test(uint32_t delay_ms)
     delay(delay_ms);
 
     // 「ABCDEFGH」
-    gp_config->reg_decode_mode = DECODE_NONE;
-    drv_max7219_config_reg(REG_DECODE_MODE, gp_config->reg_decode_mode);
+    g_config.reg_decode_mode = DECODE_NONE;
+    drv_max7219_config_reg(REG_DECODE_MODE, g_config.reg_decode_mode);
     drv_max7219_config_reg(REG_DIGIT_7, SEG_CHAR_A);
     drv_max7219_config_reg(REG_DIGIT_6, SEG_CHAR_B);
     drv_max7219_config_reg(REG_DIGIT_5, SEG_CHAR_C);
@@ -140,8 +140,8 @@ static void seg_char_test(uint32_t delay_ms)
 static void seg_animation_test(uint32_t delay_ms)
 {
     // 上丸、下丸交互
-    gp_config->reg_decode_mode = DECODE_NONE;
-    drv_max7219_config_reg(REG_DECODE_MODE, gp_config->reg_decode_mode);
+    g_config.reg_decode_mode = DECODE_NONE;
+    drv_max7219_config_reg(REG_DECODE_MODE, g_config.reg_decode_mode);
     drv_max7219_config_reg(REG_DIGIT_7, SEG_CHAR_UM);
     drv_max7219_config_reg(REG_DIGIT_6, SEG_CHAR_LM);
     drv_max7219_config_reg(REG_DIGIT_5, SEG_CHAR_UM);
@@ -179,7 +179,7 @@ void drv_max7219_show_num(uint32_t val)
     uint8_t idx = 0;
     uint8_t digits[8];
 
-    if(gp_config->reg_decode_mode != DECODE_CODE_B_FONT) {
+    if(g_config.reg_decode_mode != DECODE_CODE_B_FONT) {
         drv_max7219_config_reg(REG_DECODE_MODE,  DECODE_CODE_B_FONT);
     }
 
@@ -214,8 +214,8 @@ void drv_max7219_show_char(uint8_t *p_buf)
         return;
     }
 
-    gp_config->reg_decode_mode = DECODE_NONE;
-    drv_max7219_config_reg(REG_DECODE_MODE, gp_config->reg_decode_mode);
+    g_config.reg_decode_mode = DECODE_NONE;
+    drv_max7219_config_reg(REG_DECODE_MODE, g_config.reg_decode_mode);
 
     for(i = 0; i < 8; i++)
     {
@@ -239,17 +239,25 @@ void drv_max7219_show_char(uint8_t *p_buf)
 
 void drv_max7219_7seg_init(max7219_reg_config_t *p_config)
 {
-    gp_config = p_config;
-
     SPI.begin();
     SPI.setBitOrder(MSBFIRST);
 
-    drv_max7219_config_reg(REG_BRIGHTNESS,   p_config->reg_brightness);
-    drv_max7219_config_reg(REG_SCAN_LIMIT,   p_config->reg_scan_limit);
-    drv_max7219_config_reg(REG_SHUTDOWN,     p_config->reg_shutdown);
-    drv_max7219_config_reg(REG_DISPLAY_TEST, p_config->reg_display_test);
+    if(p_config == NULL) {
+        g_config.reg_decode_mode = DECODE_NONE;
+        g_config.reg_brightness = 0x05;
+        g_config.reg_scan_limit = SEG_DIGIT_CNT;
+        g_config.reg_shutdown = 1;
+        g_config.reg_display_test = 0;
+    } else {
+        g_config = *p_config;
+    }
+
+    drv_max7219_config_reg(REG_BRIGHTNESS,   g_config.reg_brightness);
+    drv_max7219_config_reg(REG_SCAN_LIMIT,   g_config.reg_scan_limit);
+    drv_max7219_config_reg(REG_SHUTDOWN,     g_config.reg_shutdown);
+    drv_max7219_config_reg(REG_DISPLAY_TEST, g_config.reg_display_test);
     drv_max7219_show_char((uint8_t *)"--------");
-    drv_max7219_config_reg(REG_DECODE_MODE,  p_config->reg_decode_mode);
+    drv_max7219_config_reg(REG_DECODE_MODE,  g_config.reg_decode_mode);
 }
 
 void drv_max7219_7seg_test(void)
