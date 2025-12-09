@@ -18,13 +18,13 @@ void setup()
 #endif
 
     drv_max7219_7seg_init(NULL);
-
-#ifdef DEBUG_SEG_TEST
-    drv_max7219_7seg_test();
-#endif
 }
 
 void loop()
 {
+#ifdef DEBUG_SEG_TEST
+    drv_max7219_7seg_test();
+#else
     drv_max7219_7seg_animation();
+#endif
 }

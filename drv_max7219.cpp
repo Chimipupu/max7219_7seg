@@ -13,15 +13,15 @@
 max7219_reg_config_t g_config;
 
 const uint8_t g_seg_digit[8] = {
-        REG_DIGIT_7,
-        REG_DIGIT_6,
-        REG_DIGIT_5,
-        REG_DIGIT_4,
-        REG_DIGIT_3,
-        REG_DIGIT_2,
-        REG_DIGIT_1,
-        REG_DIGIT_0
-                    };
+    REG_DIGIT_7,
+    REG_DIGIT_6,
+    REG_DIGIT_5,
+    REG_DIGIT_4,
+    REG_DIGIT_3,
+    REG_DIGIT_2,
+    REG_DIGIT_1,
+    REG_DIGIT_0
+};
 
 typedef struct {
     char c;
@@ -78,62 +78,23 @@ static void seg_animation_test(uint32_t delay_ms);
 static void seg_char_test(uint32_t delay_ms)
 {
     // 「01234567」
-    g_config.reg_decode_mode = DECODE_CODE_B_FONT;
-    drv_max7219_config_reg(REG_DECODE_MODE, g_config.reg_decode_mode);
-    drv_max7219_config_reg(REG_DIGIT_7, SEG_B_FONT_0);
-    drv_max7219_config_reg(REG_DIGIT_6, SEG_B_FONT_1);
-    drv_max7219_config_reg(REG_DIGIT_5, SEG_B_FONT_2);
-    drv_max7219_config_reg(REG_DIGIT_4, SEG_B_FONT_3);
-    drv_max7219_config_reg(REG_DIGIT_3, SEG_B_FONT_4);
-    drv_max7219_config_reg(REG_DIGIT_2, SEG_B_FONT_5);
-    drv_max7219_config_reg(REG_DIGIT_1, SEG_B_FONT_6);
-    drv_max7219_config_reg(REG_DIGIT_0, SEG_B_FONT_7);
+    drv_max7219_show_char((uint8_t *)"01234567");
     delay(delay_ms);
 
     // 「ABCDEFGH」
-    g_config.reg_decode_mode = DECODE_NONE;
-    drv_max7219_config_reg(REG_DECODE_MODE, g_config.reg_decode_mode);
-    drv_max7219_config_reg(REG_DIGIT_7, SEG_CHAR_A);
-    drv_max7219_config_reg(REG_DIGIT_6, SEG_CHAR_B);
-    drv_max7219_config_reg(REG_DIGIT_5, SEG_CHAR_C);
-    drv_max7219_config_reg(REG_DIGIT_4, SEG_CHAR_D);
-    drv_max7219_config_reg(REG_DIGIT_3, SEG_CHAR_E);
-    drv_max7219_config_reg(REG_DIGIT_2, SEG_CHAR_F);
-    drv_max7219_config_reg(REG_DIGIT_1, SEG_CHAR_G);
-    drv_max7219_config_reg(REG_DIGIT_0, SEG_CHAR_H);
+    drv_max7219_show_char((uint8_t *)"ABCDEFGH");
     delay(delay_ms);
 
     // 「IJKLNMOP」
-    drv_max7219_config_reg(REG_DIGIT_7, SEG_CHAR_I);
-    drv_max7219_config_reg(REG_DIGIT_6, SEG_CHAR_J);
-    drv_max7219_config_reg(REG_DIGIT_5, SEG_CHAR_K);
-    drv_max7219_config_reg(REG_DIGIT_4, SEG_CHAR_L);
-    drv_max7219_config_reg(REG_DIGIT_3, SEG_CHAR_N);
-    drv_max7219_config_reg(REG_DIGIT_2, SEG_CHAR_M);
-    drv_max7219_config_reg(REG_DIGIT_1, SEG_CHAR_O);
-    drv_max7219_config_reg(REG_DIGIT_0, SEG_CHAR_P);
+    drv_max7219_show_char((uint8_t *)"IJKLNMOP");
     delay(delay_ms);
 
     // 「QRSTU」
-    drv_max7219_config_reg(REG_DIGIT_7, SEG_CHAR_Q);
-    drv_max7219_config_reg(REG_DIGIT_6, SEG_CHAR_R);
-    drv_max7219_config_reg(REG_DIGIT_5, SEG_CHAR_S);
-    drv_max7219_config_reg(REG_DIGIT_4, SEG_CHAR_T);
-    drv_max7219_config_reg(REG_DIGIT_3, SEG_CHAR_U);
-    drv_max7219_config_reg(REG_DIGIT_2, SEG_CHAR_BLANK);
-    drv_max7219_config_reg(REG_DIGIT_1, SEG_CHAR_BLANK);
-    drv_max7219_config_reg(REG_DIGIT_0, SEG_CHAR_BLANK);
+    drv_max7219_show_char((uint8_t *)"QRSTU");
     delay(delay_ms);
 
     // 「VWXYZ-.」
-    drv_max7219_config_reg(REG_DIGIT_7, SEG_CHAR_V);
-    drv_max7219_config_reg(REG_DIGIT_6, SEG_CHAR_W);
-    drv_max7219_config_reg(REG_DIGIT_5, SEG_CHAR_X);
-    drv_max7219_config_reg(REG_DIGIT_4, SEG_CHAR_Y);
-    drv_max7219_config_reg(REG_DIGIT_3, SEG_CHAR_Z);
-    drv_max7219_config_reg(REG_DIGIT_2, SEG_CHAR_MINUS);
-    drv_max7219_config_reg(REG_DIGIT_1, SEG_CHAR_DP);
-    drv_max7219_config_reg(REG_DIGIT_0, SEG_CHAR_BLANK);
+    drv_max7219_show_char((uint8_t *)"VWXYZ-.");
     delay(delay_ms);
 }
 
